@@ -231,10 +231,10 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
     private void inflateRV(String latlng) {
 
         //LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        //GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
-        rvRestaurant.setLayoutManager(layoutManager);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        //StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         rvRestaurant.setHasFixedSize(true);
+        rvRestaurant.setLayoutManager(layoutManager);
 
         (new AsyncTaskGetJSON(HomeActivity.this, rvRestaurant)).execute(latlng);
 

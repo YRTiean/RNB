@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">RNB App</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="signin_with_google">Sign in with Google</string>
+    <string name="signin">Login</string>
+    <string name="signup">Sign up</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="name_label">Name</string>
+    <string name="signupActivity">SignupActivity</string>
+    <string name="google_API_key">AIzaSyA6Qa5JPT6O1dmqwZj0im0dqQzgYIDauao</string>
+    <string name="gps_network_not_enabled">GPS Network not enabled</string>
+    <string name="open_location_settings">Location Setiing</string>
+    <string name="Cancel">Cancel</string>
+</resources>

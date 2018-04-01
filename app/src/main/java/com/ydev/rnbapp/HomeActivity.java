@@ -17,14 +17,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -53,6 +50,8 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
+    final Context context = HomeActivity.this;
+    Toast mToast;
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
     private GoogleApiClient mGoogleApiClient;
@@ -67,10 +66,10 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,20 +81,19 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         mPlaceDetectionClient = Places.getPlaceDetectionClient(this);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        pgLoadingLocation = (ProgressBar) findViewById(R.id.pg_loading_location);
-        rvRestaurant = (RecyclerView) findViewById(R.id.rv_restaurant);
+        pgLoadingLocation = findViewById(R.id.pg_loading_location);
+        rvRestaurant = findViewById(R.id.rv_restaurant);
         //checkIfLocationServicesIsOn();
         getLocationPermission();
         createLocationRequest();
         //getCurrentLocation();
 
     }
-    final Context context = HomeActivity.this;
-
 
     @Override
     protected void onStart() {
         super.onStart();
+        getLocationPermission();
         createLocationRequest();
     }
 
@@ -144,6 +142,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         rvRestaurant.setVisibility(View.VISIBLE);
         pgLoadingLocation.setVisibility(View.INVISIBLE);
     }
+
     private void dataLoading(){
         rvRestaurant.setVisibility(View.INVISIBLE);
         pgLoadingLocation.setVisibility(View.VISIBLE);
@@ -213,7 +212,13 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
                             }else{
                                 Log.d(TAG, "trying again");
-                                Toast.makeText(context, "Unable to find to location. Try again later", Toast.LENGTH_SHORT).show();
+
+                                if (mToast != null)
+                                    mToast.cancel();
+
+                                mToast = Toast.makeText(context, "Unable to find to location. Try again later", Toast.LENGTH_SHORT);
+                                mToast.show();
+                                getCurrentLocation();
                             }
 
 
@@ -272,6 +277,15 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
 
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
+            }
+        } else if (requestCode == 3) {
+
+            if (resultCode == RESULT_OK) {
+
+                getLocationPermission();
+                createLocationRequest();
+            } else {
+                Toast.makeText(context, "Location permission denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
